@@ -1,0 +1,17 @@
+
+<form class="form-inline" ng-submit="submitTask()">
+  <div class="form-group">
+    <label>Task Name</label>
+    <input type="text" class="form-control" ng-model="task.name" placeholder="Enter Task Name">
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <input type="text" class="form-control" ng-model="task.description" placeholder="Enter Description">
+  </div>
+  <button type="submit" class="btn btn-default">Add Task</button>
+</form>
+<br/>
+<div ng-repeat="task in tasks">
+  {{ task.name + " - " + task.description }}
+  <a ng-click="deleteTask(postId)">delete</a>
+</div>
