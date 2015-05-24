@@ -2,7 +2,7 @@
 
 var app = angular.module('ngApp', ['ui.router', 'firebase']);
 
-app.constant('FIREBASE_URL', 'https://jennifer.firebaseio.com/tasks/');
+app.constant('FIREBASE_URL', 'https://jennifer.firebaseio.com/tasks');
 
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -27,35 +27,37 @@ app.controller('HomeCtrl', function($scope){
   $scope.awesomeThings=["HTML5", "Rails", "AngularJS"];
 });
 
-app.controller('TasksCtrl', function($scope, $firebaseArray, FIREBASE_URL){
-    var ref = new Firebase(FIREBASE_URL);
-    $scope.tasks = $firebaseArray(ref);
+app.controller('TasksCtrl', function($scope, Task){
+  $scope.tasks = Task.all;
+  $scope.task = {name: '', desc: ''};
 
-    $scope.addTask = function(){
-      $scope.tasks.$add({
-        name: $scope.name,
-        desc: $scope.desc
-      });
-    };
+  $scope.submitTask = function(){
+    Task.create($scope.task).then(function(){
+      $scope.task = {name: '', desc: ''};
+    });
+  };
 
+  $scope.deleteTask = function(task){
+    Task.delete(task);
+  };
 });
 
-// app.factory('Task', function($firebaseArray, $firebaseObject, FIREBASE_URL){
-//   var ref = new Firebase(FIREBASE_URL);
-//   var tasks = $firebaseArray(ref.child('tasks'));
+app.factory('Task', function($firebaseArray, $firebaseObject, FIREBASE_URL){
+  var ref = new Firebase(FIREBASE_URL);
+  var tasks = $firebaseArray(ref);
 
-//   var Task = {
-//     all: tasks,
-//     create: function(task){
-//       return tasks.$add(task);
-//     },
-//     get: function(taskId){
-//       return $firebaseObject(ref.child('tasks').child(taskId));
-//     },
-//     delete: function(task){
-//       return tasks.$remove(task);
-//     }
-//   };
+  var Task = {
+    all: tasks,
+    create: function(task){
+      return tasks.$add(task);
+    },
+    get: function(taskId){
+      return $firebaseObject(ref.child(taskId));
+    },
+    delete: function(task){
+      return tasks.$remove(task);
+    }
+  };
 
-//   return Task;
-// });
+  return Task;
+});
