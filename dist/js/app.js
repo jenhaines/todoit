@@ -30,11 +30,11 @@ app.controller('HomeCtrl', function($scope){
 
 app.controller('TasksCtrl', function($scope, Task){
   $scope.tasks = Task.all;
-  $scope.task = {name: '', desc: ''};
+  $scope.task = {desc: '', priority: '', status: 'active'};
 
   $scope.submitTask = function(){
     Task.create($scope.task).then(function(){
-      $scope.task = {name: '', desc: ''};
+      $scope.task = {desc: '', priority: '', status: 'active'};
     });
   };
 
