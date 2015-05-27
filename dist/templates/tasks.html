@@ -1,32 +1,29 @@
 <div class="row">
-<form ng-submit="submitTask()">
-  <div class="col-md-8 form-group">
-    <input type="text" class="form-control" ng-model="task.desc" placeholder="Enter Description">
+  <div class="col-md-12 form-group">
+    <form ng-submit="submitTask()">
+      <div class="col-md-6 col-md-offset-2">
+        <input type="text" class="form-control" ng-model="task.desc" placeholder="Enter Description">
+      </div>
+      <div class="col-md-2">
+      <select class="form-control" ng-model="task.level" ng-options="lev for lev in levels"></select>
+      </div>
+      <div class="col-md-1">
+        <button type="submit" class="btn btn-primary">Add Task</button>
+      </div>
+    </form>
   </div>
-  <div class="col-md-2 form-group">
-    <select class="form-control">
-      <option>Low</option>
-      <option>Medium</option>
-      <option>High</option>
-    </select>
+</div>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <table class="table table-striped">
+      <tr>
+        <th>Current Tasks</th><th>Priority</th>
+      </tr>
+      <tr ng-repeat="task in tasks">
+        <td>{{ task.desc }}</td>
+        <td>{{ task.level }}</td>
+      </tr>
+    </table>
   </div>
-  <div class="col-md-2">
-  <button type="submit" class="btn btn-primary">Add Task</button>
-  </form>
-</div>
-<div class="col-md-12">
-<table class="table table-striped">
-  <tr>
-    <th>Task</th><th>Priority</th><th>Status</th>
-  </tr>
-  <div ng-repeat="task in tasks">
-    <tr>
-      <td>{{ task.desc }}</td>
-      <td>{{ task.priority }}</td>
-      <td>{{ task.status }}</td>
-    </tr>
-  </div>
-</table>
-</div>
-</div>
 </div>

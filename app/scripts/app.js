@@ -6,7 +6,7 @@ app.constant('FIREBASE_URL', 'https://jennifer.firebaseio.com/tasks');
 
 app.config(function($stateProvider, $urlRouterProvider){
 
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/tasks');
 
   $stateProvider
 
@@ -29,11 +29,12 @@ app.controller('HomeCtrl', function($scope){
 
 app.controller('TasksCtrl', function($scope, Task){
   $scope.tasks = Task.all;
-  $scope.task = {desc: '', priority: '', status: 'active'};
+  $scope.task = {desc: '', level: 'high', status: 'active'};
+  $scope.levels = ['high', 'medium', 'low'];
 
   $scope.submitTask = function(){
     Task.create($scope.task).then(function(){
-      $scope.task = {desc: '', priority: '', status: 'active'};
+      $scope.task = {desc: '', level: 'high', status: 'active'};
     });
   };
 
@@ -42,7 +43,7 @@ app.controller('TasksCtrl', function($scope, Task){
   };
 });
 
-app.factory('Task', function($firebaseArray, $firebaseObject, FIREBASE_URL){
+app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
   var ref = new Firebase(FIREBASE_URL);
   var tasks = $firebaseArray(ref);
 
@@ -52,7 +53,7 @@ app.factory('Task', function($firebaseArray, $firebaseObject, FIREBASE_URL){
       return tasks.$add(task);
     },
     get: function(taskId){
-      return $firebaseObject(ref.child(taskId));
+      return $firebaseObject(ref.child('tasks').child(taskId));
     },
     delete: function(task){
       return tasks.$remove(task);
