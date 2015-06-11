@@ -14,13 +14,13 @@ app.config(function($stateProvider, $urlRouterProvider){
       .state('active', {
           url: '/active',
           templateUrl: '/templates/activeTasks.html',
-          controller: 'TasksCtrl'
+          controller: 'ActiveTasksCtrl'
       })
 
       .state('complete', {
           url: '/complete',
           templateUrl: '/templates/completeTasks.html',
-          controller: 'TasksCtrl'
+          controller: 'CompleteTasksCtrl'
       })
 
       .state('home', {
@@ -34,18 +34,18 @@ app.controller('HomeCtrl', function($scope){
   $scope.awesomeThings=["HTML5", "Rails", "AngularJS"];
 });
 
-app.controller('TasksCtrl', function($scope, Task){
+app.controller('ActiveTasksCtrl', function($scope, Task){
   $scope.tasks = Task.all;
   $scope.task = {desc: '', level: 'high'};
   $scope.levels = ['high', 'medium', 'low']; 
   
 
   $scope.submitTask = function(task){
-    var timestamp = Firebase.ServerValue.TIMESTAMP;
-    // var timestamp = getRandomDate().getTime();
+    // var timestamp = Firebase.ServerValue.TIMESTAMP;
+    var timestamp = getRandomDate().getTime();
     task.created = timestamp;
-    task.status = 'active';
-    // task.status = getRandomStatus();
+    // task.status = 'active';
+    task.status = getRandomStatus();
     Task.create(task).then(function(){
       $scope.task = {desc: '', level: 'high'};
     });
@@ -72,8 +72,22 @@ app.controller('TasksCtrl', function($scope, Task){
       return 'complete';
     };
   };
-
 });
+
+app.controller('CompleteTasksCtrl', function($scope, Task){
+   $scope.tasks = Task.all;
+});
+
+
+  // function genTask() {
+  //   return {name: chance.string()}
+  // }
+
+  // for (var i=0;i < 100; )
+
+  // $scope.tasks = [
+  // {name: chance.string()}
+  // ]
 
 app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
   var ref = new Firebase(FIREBASE_URL + '/tasks');

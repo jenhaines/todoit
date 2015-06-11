@@ -19,7 +19,7 @@
       <tr>
         <th>Current Tasks</th><th>Level</th><th>Status</th><th>Created</th><th></th>
       </tr>
-      <tr ng-repeat="task in tasks | filter: {status:'active'}">
+      <tr ng-repeat="task in tasks | filter: {status:'active'} ">
         <td>{{ task.desc }}</td>
         <td>{{ task.level }}</td>
         <td>{{ task.status }}</td>

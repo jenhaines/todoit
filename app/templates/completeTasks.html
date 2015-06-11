@@ -1,16 +1,6 @@
 <div class="row">
   <div class="col-md-12 form-group">
-    <form ng-submit="submitTask(task)">
-      <div class="col-md-6 col-md-offset-2">
-        <input type="text" class="form-control" ng-model="task.desc" placeholder="Enter Description">
-      </div>
-      <div class="col-md-2">
-      <select class="form-control" ng-model="task.level" ng-options="lev for lev in levels"></select>
-      </div>
-      <div class="col-md-1">
-        <button type="submit" class="btn btn-primary">Add Task</button>
-      </div>
-    </form>
+   
   </div>
 </div>
 <div class="row">
@@ -20,7 +10,7 @@
         <th>Current Tasks</th><th>Level</th><th>Status</th><th>Created</th>
       </tr>
       <tr ng-repeat="task in tasks | filter: {status:'complete'}">
-        <td>{{ task.desc }}</td>
+        <td><s>{{ task.desc }}</s></td>
         <td>{{ task.level }}</td>
         <td>{{ task.status }}</td>
         <td>{{ task.created | date }}</td>
