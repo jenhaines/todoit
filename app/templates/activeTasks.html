@@ -12,19 +12,19 @@
       </div>
     </form>
   </div>
-    <a href="#" ui-sref="complete">Complete</a>
 </div>
 <div class="row">
   <div class="col-md-8 col-md-offset-2">
     <table class="table table-striped">
       <tr>
-        <th>Current Tasks</th><th>Status</th><th>Active</th><th>Created</th>
+        <th>Current Tasks</th><th>Level</th><th>Status</th><th>Created</th><th></th>
       </tr>
       <tr ng-repeat="task in tasks | filter: {status:'active'}">
-        <td><a href="#" ng-click="deleteTask(task)">{{ task.desc }}</a></td>
+        <td>{{ task.desc }}</td>
         <td>{{ task.level }}</td>
         <td>{{ task.status }}</td>
         <td>{{ task.created | date }}</td>
+        <td><button ng-click="markComplete(task)" class="btn btn-primary btn-sm">Complete</button></td>
       </tr>
     </table>
   </div>

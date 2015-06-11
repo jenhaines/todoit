@@ -40,14 +40,20 @@ app.controller('TasksCtrl', function($scope, Task){
   
 
   $scope.submitTask = function(task){
-    // var timestamp = Firebase.ServerValue.TIMESTAMP;
-    var timestamp = getRandomDate().getTime();
+    var timestamp = Firebase.ServerValue.TIMESTAMP;
+    // var timestamp = getRandomDate().getTime();
     task.created = timestamp;
-    // task.status = 'active';
-    task.status = getRandomStatus();
+    task.status = 'active';
+    // task.status = getRandomStatus();
     Task.create(task).then(function(){
       $scope.task = {desc: '', level: 'high'};
     });
+  };
+
+  $scope.markComplete = function(task){
+    if( confirm('Are you sure?')) {
+      Task.markComplete(task);
+    };
   };
 
 // used to create realistic seed data
@@ -66,9 +72,6 @@ app.controller('TasksCtrl', function($scope, Task){
     };
   };
 
-  $scope.deleteTask = function(task){
-    Task.delete(task);
-  };
 });
 
 app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
@@ -98,6 +101,10 @@ app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBAS
     },
     delete: function(task){
       return tasks.$remove(task);
+    },
+    markComplete: function(task){
+        task.status = 'complete';
+        return tasks.$save(task);
     }
   };
 

@@ -17,10 +17,10 @@
   <div class="col-md-8 col-md-offset-2">
     <table class="table table-striped">
       <tr>
-        <th>Current Tasks</th><th>Status</th><th>Active</th><th>Created</th>
+        <th>Current Tasks</th><th>Level</th><th>Status</th><th>Created</th>
       </tr>
-      <tr ng-repeat="task in tasks | filter: {status:'complete'">
-        <td><a href="#" ng-click="deleteTask(task)">{{ task.desc }}</a></td>
+      <tr ng-repeat="task in tasks | filter: {status:'complete'}">
+        <td>{{ task.desc }}</td>
         <td>{{ task.level }}</td>
         <td>{{ task.status }}</td>
         <td>{{ task.created | date }}</td>
