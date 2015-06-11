@@ -43,8 +43,8 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
     // var timestamp = Firebase.ServerValue.TIMESTAMP;
     var timestamp = getRandomDate().getTime();
     task.created = timestamp;
-    // task.status = 'active';
-    task.status = getRandomStatus();
+    task.status = 'active';
+    // task.status = getRandomStatus();
     Task.create(task).then(function(){
       $scope.task = {desc: '', level: 'high'};
     });
@@ -78,30 +78,9 @@ app.controller('CompleteTasksCtrl', function($scope, Task){
 });
 
 
-  // function genTask() {
-  //   return {name: chance.string()}
-  // }
-
-  // for (var i=0;i < 100; )
-
-  // $scope.tasks = [
-  // {name: chance.string()}
-  // ]
-
 app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
   var ref = new Firebase(FIREBASE_URL + '/tasks');
   var query = ref.orderByChild('created');
-  // var reverseResults = [];
-
-  // query.once('value', function(snap){
-  //   var results = [];
-  //   snap.forEach(function(data){
-  //     results.push(data.val());
-  //   });
-  //   reverseResults = results.reverse();
-  // });
-
-  // console.log(reverseResults);
 
   var tasks = $firebaseArray(query);
 
