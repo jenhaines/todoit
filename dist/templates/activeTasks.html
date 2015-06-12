@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12 form-group">
-    <form ng-submit="submitTask()">
+    <form ng-submit="submitTask(task)">
       <div class="col-md-6 col-md-offset-2">
         <input type="text" class="form-control" ng-model="task.desc" placeholder="Enter Description">
       </div>
@@ -13,16 +13,17 @@
     </form>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-8 col-md-offset-2">
     <table class="table table-striped">
       <tr>
-        <th>Current Tasks</th><th>Priority</th>
+        <th>Current Tasks</th><th>Level</th><th>Created</th><th></th>
       </tr>
-      <tr ng-repeat="task in tasks">
+      <tr ng-repeat="task in tasks | filter: {status:'active'} | orderBy:created:reverse">
         <td>{{ task.desc }}</td>
         <td>{{ task.level }}</td>
+        <td>{{ task.created | date }}</td>
+        <td><button ng-click="markComplete(task)" class="btn btn-primary btn-sm">Complete</button></td>
       </tr>
     </table>
   </div>
