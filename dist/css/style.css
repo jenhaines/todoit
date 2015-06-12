@@ -6,3 +6,8 @@ td {
 
 th {
   font-size: 18px; }
+
+.heading {
+  border-radius: 5px;
+  color: white;
+  background: #3366CC; }

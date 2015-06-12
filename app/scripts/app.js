@@ -103,3 +103,7 @@ app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBAS
 
   return Task;
 });
+
+app.filter('completed', function(){
+
+});
