@@ -1,19 +1,14 @@
-<div class="row">
-  <div class="col-md-12 form-group">
-   
-  </div>
-</div>
-<div class="row">
   <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-12 heading"><h3>Completed/Expired Tasks</h3></div>
     <table class="table table-striped">
       <tr>
-        <th>Current Tasks</th><th>Level</th><th>Created</th>
+        <th>Task</th><th>Level</th><th>Created</th><th></th>
       </tr>
-      <tr ng-repeat="task in tasks | filter: {status:'complete'} | orderBy:created:reverse">
+      <tr ng-repeat="task in tasks | filter:isExpired | orderBy:'-created'">
         <td><s>{{ task.desc }}</s></td>
         <td>{{ task.level }}</td>
-        <td>{{ task.created | date }}</td>
+        <td>{{ task.created | date}}</td>
+        <td>{{task.status}}</td>
       </tr>
     </table>
   </div>
-</div>
