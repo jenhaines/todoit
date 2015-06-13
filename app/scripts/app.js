@@ -75,7 +75,19 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
 
 app.controller('CompleteTasksCtrl', function($scope, Task){
    $scope.tasks = Task.all;
+
+   $scope.isExpired = function(item){
+       var d = new Date();
+       var d7 = d.setDate(d.getDate()-7);
+       var fdatenow = new Date(d7);
+       var itemDate = new Date(item.created);
+      if((itemDate < fdatenow) || (item.status==='complete')){
+        return item;
+      };
+   };
+
 });
+
 
 
 app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
@@ -102,8 +114,4 @@ app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBAS
   };
 
   return Task;
-});
-
-app.filter('completed', function(){
-
 });
