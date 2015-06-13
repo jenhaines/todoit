@@ -35,18 +35,17 @@ app.controller('HomeCtrl', function($scope){
 
 app.controller('ActiveTasksCtrl', function($scope, Task){
   $scope.tasks = Task.all;
-  $scope.task = {desc: '', level: 'high'};
-  $scope.levels = ['high', 'medium', 'low']; 
-  
+  $scope.task = {desc: '', level: 1};
+  $scope.levels = [{'value': 1, 'text': 'High'}, {'value': 2, 'text': 'Medium'}, {'value': 3, 'text': 'Low'}]; 
 
   $scope.submitTask = function(task){
-    // var timestamp = Firebase.ServerValue.TIMESTAMP;
-    var timestamp = getRandomDate().getTime();
+    var timestamp = Firebase.ServerValue.TIMESTAMP;
+    // var timestamp = getRandomDate().getTime();
     task.created = timestamp;
     task.status = 'active';
     // task.status = getRandomStatus();
     Task.create(task).then(function(){
-      $scope.task = {desc: '', level: 'high'};
+      $scope.task = {desc: '', level:  1};
     });
   };
 
@@ -71,6 +70,19 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
       return 'complete';
     };
   };
+});
+
+app.filter('convertLevel', function(){
+    return function(level){
+    debugger;
+      if(level===1){
+        return 'High';
+      }else if(level===2){
+        return 'Medium';
+      }else{
+        return 'Low';
+      }   
+    }
 });
 
 app.controller('CompleteTasksCtrl', function($scope, Task){

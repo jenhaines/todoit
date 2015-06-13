@@ -1,16 +1,16 @@
 <div class="col-md-8 col-md-offset-2">
     <form class="form-inline" ng-submit="submitTask(task)">
         <input type="text" class="form-control" size="75%" ng-model="task.desc" placeholder="Enter Description">
-        <select class="form-control" ng-model="task.level" ng-options="lev for lev in levels"></select>
+        <select class="form-control" ng-model="task.level" ng-options="lev.value as lev.text for lev in levels"></select>
         <button type="submit" class="btn btn-primary">Add Task</button>
     </form>
   <table class="table table-striped">
     <tr>
-      <th>Actove Tasks</th><th>Level</th><th>Created</th><th></th>
+      <th>Active Tasks</th><th>Level</th><th>Created</th><th></th>
     </tr>
-    <tr ng-repeat="task in tasks | filter: {status:'active'} | orderBy:created:reverse">
+    <tr ng-repeat="task in tasks | filter: {status:'active'} | orderBy:'-created'">
       <td>{{ task.desc }}</td>
-      <td>{{ task.level }}</td>
+      <td>{{ task.level | convertLevel }}</td>
       <td>{{ task.created | date }}</td>
       <td><button ng-click="markComplete(task)" class="btn btn-primary btn-sm">Complete</button></td>
     </tr>
