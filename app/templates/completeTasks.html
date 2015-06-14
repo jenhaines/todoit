@@ -4,11 +4,11 @@
       <tr>
         <th>Task</th><th>Level</th><th>Created</th><th></th>
       </tr>
-      <tr ng-repeat="task in tasks | filter:isExpired | orderBy:'-created'">
+      <tr ng-repeat="task in tasks | filter:isExpired">
         <td><s>{{ task.desc }}</s></td>
         <td>{{ task.level }}</td>
         <td>{{ task.created | date}}</td>
-        <td>{{task.status}}</td>
+        <td>{{oldActive(task.status)}}</td>
       </tr>
     </table>
   </div>

@@ -8,7 +8,7 @@
     <tr>
       <th>Active Tasks</th><th>Level</th><th>Created</th><th></th>
     </tr>
-    <tr ng-repeat="task in tasks | filter: {status:'active'} | orderBy:'-created'">
+    <tr ng-repeat="task in tasks | filter:'!'+isExpired">
       <td>{{ task.desc }}</td>
       <td>{{ task.level | convertLevel }}</td>
       <td>{{ task.created | date }}</td>

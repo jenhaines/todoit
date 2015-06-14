@@ -23,6 +23,12 @@ app.config(function($stateProvider, $urlRouterProvider){
           controller: 'CompleteTasksCtrl'
       })
 
+      .state('seed', {
+        url: '/seed',
+        templateUrl: '/templates/seed.html',
+        controller: 'SeedDataCtrl'
+      })
+
       .state('home', {
           url: '/',
           templateUrl: '/templates/home.html', 
@@ -32,6 +38,10 @@ app.config(function($stateProvider, $urlRouterProvider){
 
 app.controller('HomeCtrl', function($scope){
   $scope.awesomeThings=["HTML5", "Rails", "AngularJS"];
+});
+
+app.controller('SeedDataCtrl', function(){
+
 });
 
 app.controller('ActiveTasksCtrl', function($scope, Task){
@@ -75,7 +85,6 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
 
 app.filter('convertLevel', function(){
     return function(level){
-    debugger;
       if(level===1){
         return 'High';
       }else if(level===2){
@@ -86,21 +95,47 @@ app.filter('convertLevel', function(){
     }
 });
 
+app.filter('isExpired', function(){
+  return function(items){
+    debugger;
+    var filtered =[]
+    var d = new Date();
+    var d7 = d.setDate(d.getDate()-7);
+    var fdatenow = new Date(d7);
+    for(var i=0; i<items.length; i++){
+      var item = items[i];
+      var itemDate = new Date(item.created);
+      if((itemDate < fdatenow) || (item.status==='complete')){
+          filtered.push(item);
+      }
+    }
+    return filtered;
+  }
+});
+
+
 app.controller('CompleteTasksCtrl', function($scope, Task){
    $scope.tasks = Task.all;
 
-   $scope.isExpired = function(item){
-       var d = new Date();
-       var d7 = d.setDate(d.getDate()-7);
-       var fdatenow = new Date(d7);
-       var itemDate = new Date(item.created);
-      if((itemDate < fdatenow) || (item.status==='complete')){
-        return item;
+   // $scope.isExpired = function(item){
+   //     var d = new Date();
+   //     var d7 = d.setDate(d.getDate()-7);
+   //     var fdatenow = new Date(d7);
+   //     var itemDate = new Date(item.created);
+   //    if((itemDate < fdatenow) || (item.status==='complete')){
+   //      return item;
+   //    };
+   // };
+
+   $scope.oldActive = function(status){
+      if(status==='active'){
+        return 'expired';
+      }else{
+        return status;
       };
    };
 
 });
-
 
 
 app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
@@ -108,7 +143,6 @@ app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBAS
   var query = ref.orderByChild('created');
 
   var tasks = $firebaseArray(query);
-
   var Task = {
     all: tasks,
     create: function(task){
