@@ -1,5 +1,3 @@
-
-
 var app = angular.module('ngApp', ['ui.router', 'firebase']);
 
 app.constant('FIREBASE_URL', 'https://jennifer.firebaseio.com');
@@ -39,8 +37,34 @@ app.controller('HomeCtrl', function($scope){
   $scope.awesomeThings=["HTML5", "Rails", "AngularJS"];
 });
 
-app.controller('SeedDataCtrl', function(){
+app.controller('SeedDataCtrl', function(Task, $scope){
+  $scope.tasks= Task.all;
+  $scope.createTask = function(){
+    var task = {};
+    task.desc = chance.sentence({words: 5});
+    var rndLevel = Math.floor(Math.random() * (3 - 1)) + 1;
+    task.level = rndLevel;
+    var timestamp = getRandomDate().getTime();
+    task.created = timestamp;
+    task.status = getRandomStatus();
+    Task.create(task);
+  };
 
+// used to create realistic seed data
+  var getRandomDate = function() {
+    var from = new Date(2015, 0, 1).getTime();
+    var to = new Date(2015, 5, 10).getTime();
+    return new Date(from + Math.round(Math.random()) * (to - from));
+  };
+
+  var getRandomStatus = function() {
+    var x = Math.round(Math.random());
+    if(x===0){
+      return 'active';
+    }else{
+      return 'complete';
+    };
+  };
 });
 
 app.controller('ActiveTasksCtrl', function($scope, Task){
@@ -64,23 +88,8 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
       Task.markComplete(task);
     };
   };
-
-// used to create realistic seed data
-  var getRandomDate = function() {
-    var from = new Date(2015, 0, 1).getTime();
-    var to = new Date(2015, 5, 10).getTime();
-    return new Date(from + Math.random() * (to - from));
-  };
-
-  var getRandomStatus = function() {
-    var x = Math.random();
-    if(x===0){
-      return 'active';
-    }else{
-      return 'complete';
-    };
-  };
 });
+
 
 app.filter('convertLevel', function(){
     return function(level){
@@ -96,7 +105,6 @@ app.filter('convertLevel', function(){
 
 app.filter('isExpired', function(){
   return function(items){
-    debugger;
     var filtered =[]
     var d = new Date();
     var d7 = d.setDate(d.getDate()-7);
@@ -116,16 +124,6 @@ app.filter('isExpired', function(){
 app.controller('CompleteTasksCtrl', function($scope, Task){
    $scope.tasks = Task.all;
 
-   // $scope.isExpired = function(item){
-   //     var d = new Date();
-   //     var d7 = d.setDate(d.getDate()-7);
-   //     var fdatenow = new Date(d7);
-   //     var itemDate = new Date(item.created);
-   //    if((itemDate < fdatenow) || (item.status==='complete')){
-   //      return item;
-   //    };
-   // };
-
    $scope.oldActive = function(status){
       if(status==='active'){
         return 'expired';
@@ -139,9 +137,9 @@ app.controller('CompleteTasksCtrl', function($scope, Task){
 
 app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
   var ref = new Firebase(FIREBASE_URL + '/tasks');
-  var query = ref.orderByChild('created');
+  // var query = ref.orderByChild('created');
 
-  var tasks = $firebaseArray(query);
+  var tasks = $firebaseArray(ref);
   var Task = {
     all: tasks,
     create: function(task){

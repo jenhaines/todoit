@@ -1,6 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-
-
 var app = angular.module('ngApp', ['ui.router', 'firebase']);
 
 app.constant('FIREBASE_URL', 'https://jennifer.firebaseio.com');
@@ -40,8 +38,34 @@ app.controller('HomeCtrl', function($scope){
   $scope.awesomeThings=["HTML5", "Rails", "AngularJS"];
 });
 
-app.controller('SeedDataCtrl', function(){
+app.controller('SeedDataCtrl', function(Task, $scope){
+  $scope.tasks= Task.all;
+  $scope.createTask = function(){
+    var task = {};
+    task.desc = chance.sentence({words: 5});
+    var rndLevel = Math.floor(Math.random() * (3 - 1)) + 1;
+    task.level = rndLevel;
+    var timestamp = getRandomDate().getTime();
+    task.created = timestamp;
+    task.status = getRandomStatus();
+    Task.create(task);
+  };
 
+// used to create realistic seed data
+  var getRandomDate = function() {
+    var from = new Date(2015, 0, 1).getTime();
+    var to = new Date(2015, 5, 10).getTime();
+    return new Date(from + Math.round(Math.random()) * (to - from));
+  };
+
+  var getRandomStatus = function() {
+    var x = Math.round(Math.random());
+    if(x===0){
+      return 'active';
+    }else{
+      return 'complete';
+    };
+  };
 });
 
 app.controller('ActiveTasksCtrl', function($scope, Task){
@@ -65,23 +89,8 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
       Task.markComplete(task);
     };
   };
-
-// used to create realistic seed data
-  var getRandomDate = function() {
-    var from = new Date(2015, 0, 1).getTime();
-    var to = new Date(2015, 5, 10).getTime();
-    return new Date(from + Math.random() * (to - from));
-  };
-
-  var getRandomStatus = function() {
-    var x = Math.random();
-    if(x===0){
-      return 'active';
-    }else{
-      return 'complete';
-    };
-  };
 });
+
 
 app.filter('convertLevel', function(){
     return function(level){
@@ -97,7 +106,6 @@ app.filter('convertLevel', function(){
 
 app.filter('isExpired', function(){
   return function(items){
-    debugger;
     var filtered =[]
     var d = new Date();
     var d7 = d.setDate(d.getDate()-7);
@@ -117,16 +125,6 @@ app.filter('isExpired', function(){
 app.controller('CompleteTasksCtrl', function($scope, Task){
    $scope.tasks = Task.all;
 
-   // $scope.isExpired = function(item){
-   //     var d = new Date();
-   //     var d7 = d.setDate(d.getDate()-7);
-   //     var fdatenow = new Date(d7);
-   //     var itemDate = new Date(item.created);
-   //    if((itemDate < fdatenow) || (item.status==='complete')){
-   //      return item;
-   //    };
-   // };
-
    $scope.oldActive = function(status){
       if(status==='active'){
         return 'expired';
@@ -140,9 +138,9 @@ app.controller('CompleteTasksCtrl', function($scope, Task){
 
 app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
   var ref = new Firebase(FIREBASE_URL + '/tasks');
-  var query = ref.orderByChild('created');
+  // var query = ref.orderByChild('created');
 
-  var tasks = $firebaseArray(query);
+  var tasks = $firebaseArray(ref);
   var Task = {
     all: tasks,
     create: function(task){
@@ -162,5 +160,4 @@ app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBAS
 
   return Task;
 });
-
 },{}]},{},[1]);
