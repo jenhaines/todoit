@@ -40,26 +40,31 @@ app.controller('HomeCtrl', function($scope){
 
 app.controller('SeedDataCtrl', function(Task, $scope){
   $scope.tasks= Task.all;
+
   $scope.createTask = function(){
     var task = {};
     task.desc = chance.sentence({words: 5});
-    var rndLevel = Math.floor(Math.random() * (3 - 1)) + 1;
-    task.level = rndLevel;
-    var timestamp = getRandomDate().getTime();
+    task.level = rndNumGen(1, 3)
+    var timestamp = getRandomDate();
     task.created = timestamp;
     task.status = getRandomStatus();
     Task.create(task);
   };
 
+  // random number generator
+  var rndNumGen = function(start, finish){
+    return Math.floor((Math.random() * finish) + start);
+  };
+
 // used to create realistic seed data
   var getRandomDate = function() {
     var from = new Date(2015, 0, 1).getTime();
-    var to = new Date(2015, 5, 10).getTime();
-    return new Date(from + Math.round(Math.random()) * (to - from));
+    var to = new Date().getTime();
+    return new Date(from + Math.round(Math.random()) * (to - from)).getTime();
   };
 
   var getRandomStatus = function() {
-    var x = Math.round(Math.random());
+    var x = rndNumGen(0, 1);
     if(x===0){
       return 'active';
     }else{
@@ -121,6 +126,22 @@ app.filter('isExpired', function(){
   }
 });
 
+app.filter('currentTasks', function(){
+  return function(items){
+    var filtered =[]
+    var d = new Date();
+    var d7 = d.setDate(d.getDate()-7);
+    var fdatenow = new Date(d7);
+    for(var i=0; i<items.length; i++){
+      var item = items[i];
+      var itemDate = new Date(item.created);
+      if((itemDate > fdatenow) &&(item.status==='active')){
+          filtered.push(item);
+      }
+    }
+    return filtered;
+  }
+});
 
 app.controller('CompleteTasksCtrl', function($scope, Task){
    $scope.tasks = Task.all;

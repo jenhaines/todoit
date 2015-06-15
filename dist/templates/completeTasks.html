@@ -4,7 +4,7 @@
       <tr>
         <th>Task</th><th>Level</th><th>Created</th><th></th>
       </tr>
-      <tr ng-repeat="task in tasks | filter:isExpired">
+      <tr ng-repeat="task in tasks | isExpired">
         <td><s>{{ task.desc }}</s></td>
         <td>{{ task.level }}</td>
         <td>{{ task.created | date}}</td>
