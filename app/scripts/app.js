@@ -1,4 +1,4 @@
-var app = angular.module('ngApp', ['ui.router', 'firebase']);
+var app = angular.module('ngApp', ['ui.router', 'firebase', 'ngAnimate']);
 
 app.constant('FIREBASE_URL', 'https://jennifer.firebaseio.com');
 
@@ -43,11 +43,14 @@ app.controller('SeedDataCtrl', function(Task, $scope){
   $scope.createTask = function(){
     var task = {};
     task.desc = chance.sentence({words: 5});
-    task.level = rndNumGen(1, 3)
-    var timestamp = getRandomDate();
-    task.created = timestamp;
+    task.level = rndNumGen(1, 3);
+    // var timestamp = getRandomDate();
+    var timestamp = Firebase.ServerValue.TIMESTAMP;
+    task.created = getRandomDate();
     task.status = getRandomStatus();
-    Task.create(task);
+    Task.create(task).then(function(){
+      $scope.tasklist = 'Task created!';
+    });
   };
 
   // random number generator
@@ -57,9 +60,9 @@ app.controller('SeedDataCtrl', function(Task, $scope){
 
 // used to create realistic seed data
   var getRandomDate = function() {
-    var from = new Date(2015, 0, 1).getTime();
+    var from = new Date(2015, 5, 1).getTime();
     var to = new Date().getTime();
-    return new Date(from + Math.round(Math.random()) * (to - from)).getTime();
+    return new Date(from + Math.random() * (to - from)).getTime();
   };
 
   var getRandomStatus = function() {
@@ -79,10 +82,8 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
 
   $scope.submitTask = function(task){
     var timestamp = Firebase.ServerValue.TIMESTAMP;
-    // var timestamp = getRandomDate().getTime();
     task.created = timestamp;
     task.status = 'active';
-    // task.status = getRandomStatus();
     Task.create(task).then(function(){
       $scope.task = {desc: '', level:  1};
     });
@@ -98,13 +99,8 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
 
 app.filter('convertLevel', function(){
     return function(level){
-      if(level===1){
-        return 'High';
-      }else if(level===2){
-        return 'Medium';
-      }else{
-        return 'Low';
-      }   
+      var levels = {1: 'High', 2: 'Medium', 3: 'Low'};
+      return levels[level];
     }
 });
 
@@ -151,8 +147,7 @@ app.controller('CompleteTasksCtrl', function($scope, Task){
       }else{
         return status;
       };
-   };
-
+    };
 });
 
 
