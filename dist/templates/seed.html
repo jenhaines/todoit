@@ -1,0 +1,17 @@
+<div class="col-md-8 col-md-offset-2">
+<h3>Seed Data</h3>
+</br>
+<button ng-click="createTask()" class="btn btn-primary">Create Task</button>
+</br>
+<p>{{ taskList }}</p>
+<table class="table table-striped">
+  <tr>
+    <th>ALL Tasks</th><th>Level</th><th>Status</th><th>Created</th>
+  </tr>
+  <tr ng-repeat="task in tasks">
+    <td>{{ $index }}</td>
+    <td>{{ task.desc }}</td>
+    <td>{{ task.status }}</td>
+    <td>{{ task.created | date}}</td>
+  </tr>
+</table></div>
