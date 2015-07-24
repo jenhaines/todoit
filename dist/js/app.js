@@ -1,16 +1,16 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var app = angular.module('ngApp', ['ui.router', 'firebase', 'ngAnimate']);
+angular.module('ngApp', ['ui.router', 'firebase', 'ngAnimate'])
 
-app.constant('FIREBASE_URL', 'https://jennifer.firebaseio.com');
+.constant('FIREBASE_URL', 'https://jennifer.firebaseio.com')
 
-app.config(function($stateProvider, $urlRouterProvider){
+.config(function($stateProvider, $urlRouterProvider){
 
-  $urlRouterProvider.otherwise('/active');
+  $urlRouterProvider.otherwise('/');
 
   $stateProvider
 
       .state('active', {
-          url: '/active',
+          url: '/',
           templateUrl: '/templates/activeTasks.html',
           controller: 'ActiveTasksCtrl'
       })
@@ -25,20 +25,10 @@ app.config(function($stateProvider, $urlRouterProvider){
         url: '/seed',
         templateUrl: '/templates/seed.html',
         controller: 'SeedDataCtrl'
-      })
-
-      .state('home', {
-          url: '/',
-          templateUrl: '/templates/home.html', 
-          controller: 'HomeCtrl'
       });
-});
+})
 
-app.controller('HomeCtrl', function($scope){
-  $scope.awesomeThings=["HTML5", "Rails", "AngularJS"];
-});
-
-app.controller('SeedDataCtrl', function(Task, $scope){
+.controller('SeedDataCtrl', function(Task, $scope){
   $scope.tasks= Task.all;
 
   $scope.createTask = function(){
@@ -74,9 +64,9 @@ app.controller('SeedDataCtrl', function(Task, $scope){
       return 'complete';
     };
   };
-});
+})
 
-app.controller('ActiveTasksCtrl', function($scope, Task){
+.controller('ActiveTasksCtrl', function($scope, Task){
   $scope.tasks = Task.all;
   $scope.task = {desc: '', level: 1};
   $scope.levels = [{'value': 1, 'text': 'High'}, {'value': 2, 'text': 'Medium'}, {'value': 3, 'text': 'Low'}]; 
@@ -95,17 +85,17 @@ app.controller('ActiveTasksCtrl', function($scope, Task){
       Task.markComplete(task);
     };
   };
-});
+})
 
 
-app.filter('convertLevel', function(){
+.filter('convertLevel', function(){
     return function(level){
       var levels = {1: 'High', 2: 'Medium', 3: 'Low'};
       return levels[level];
     }
-});
+})
 
-app.filter('isExpired', function(){
+.filter('isExpired', function(){
   return function(items){
     var filtered =[]
     var d = new Date();
@@ -120,9 +110,9 @@ app.filter('isExpired', function(){
     }
     return filtered;
   }
-});
+})
 
-app.filter('currentTasks', function(){
+.filter('currentTasks', function(){
   return function(items){
     var filtered =[]
     var d = new Date();
@@ -137,9 +127,9 @@ app.filter('currentTasks', function(){
     }
     return filtered;
   }
-});
+})
 
-app.controller('CompleteTasksCtrl', function($scope, Task){
+.controller('CompleteTasksCtrl', function($scope, Task){
    $scope.tasks = Task.all;
 
    $scope.oldActive = function(status){
@@ -149,10 +139,9 @@ app.controller('CompleteTasksCtrl', function($scope, Task){
         return status;
       };
     };
-});
+})
 
-
-app.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
+.factory('Task', function($firebase, $firebaseArray, $firebaseObject, FIREBASE_URL){
   var ref = new Firebase(FIREBASE_URL + '/tasks');
   // var query = ref.orderByChild('created');
 
